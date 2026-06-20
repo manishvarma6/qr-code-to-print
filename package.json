@@ -1,0 +1,16 @@
+{
+  "name": "qr-print-shop-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot jo print orders sunta hai aur HP printer pe print karta hai",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0",
+    "pdf-to-printer": "^5.6.0"
+  }
+}
