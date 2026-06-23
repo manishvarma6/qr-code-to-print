@@ -42,20 +42,22 @@ bot.on("callback_query", async (query) => {
   const action = query.data;
   const oldCaption = query.message.caption || "";
 
-  // Sirf shop owner (aap) hi PRINT/REJECT dabaa sako, koi aur nahi
+  // Sirf shop owner (aap) hi PRINT/REJECT dabaa sako
   if (String(chatId) !== String(config.TELEGRAM_CHAT_ID)) {
-    await bot.answerCallbackQuery(query.id, { text: "Aap authorized nahi ho." });
+    try { await bot.answerCallbackQuery(query.id, { text: "Aap authorized nahi ho." }); } catch(_){}
     return;
   }
 
   // ---- REJECT ----
   if (action === "reject") {
-    await bot.answerCallbackQuery(query.id, { text: "Order reject kar diya" });
-    await bot.editMessageCaption(oldCaption + "\n\n❌ REJECTED", {
-      chat_id: chatId,
-      message_id: messageId,
-      reply_markup: { inline_keyboard: [] },
-    });
+    try { await bot.answerCallbackQuery(query.id, { text: "Order reject kar diya" }); } catch(_){}
+    try {
+      await bot.editMessageCaption(oldCaption + "\n\n❌ REJECTED", {
+        chat_id: chatId,
+        message_id: messageId,
+        reply_markup: { inline_keyboard: [] },
+      });
+    } catch(_){}
     return;
   }
 
@@ -63,14 +65,13 @@ bot.on("callback_query", async (query) => {
   if (action === "print") {
     const document = query.message.document;
     if (!document) {
-      await bot.answerCallbackQuery(query.id, { text: "PDF file nahi mili!" });
+      try { await bot.answerCallbackQuery(query.id, { text: "PDF file nahi mili!" }); } catch(_){}
       return;
     }
 
-    try {
-      await bot.answerCallbackQuery(query.id, { text: "Printing shuru ho rahi hai..." });
+    try { await bot.answerCallbackQuery(query.id, { text: "Printing shuru ho rahi hai..." }); } catch(_){}
 
-      // Telegram se file download karo
+    try {
       const fileLink = await bot.getFileLink(document.file_id);
       const localPath = path.join(ORDERS_DIR, `order_${Date.now()}.pdf`);
 
@@ -78,22 +79,25 @@ bot.on("callback_query", async (query) => {
       const arrayBuffer = await response.arrayBuffer();
       fs.writeFileSync(localPath, Buffer.from(arrayBuffer));
 
-      // Printer ko bhejo
       await print(localPath, { printer: config.PRINTER_NAME });
 
-      await bot.editMessageCaption(oldCaption + "\n\n✅ PRINTED", {
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: { inline_keyboard: [] },
-      });
+      try {
+        await bot.editMessageCaption(oldCaption + "\n\n✅ PRINTED", {
+          chat_id: chatId,
+          message_id: messageId,
+          reply_markup: { inline_keyboard: [] },
+        });
+      } catch(_){}
 
       console.log(`🖨️  Print ho gaya: ${localPath}`);
     } catch (err) {
       console.error("Print error:", err);
-      await bot.sendMessage(
-        chatId,
-        `⚠️ Print fail ho gaya.\nWajah: ${err.message}\n\nCheck karo:\n- Printer ka naam config.js mein EXACT match hai?\n- Printer ON hai aur PC se connected hai?`
-      );
+      try {
+        await bot.sendMessage(
+          chatId,
+          `⚠️ Print fail ho gaya.\nWajah: ${err.message}\n\nCheck karo:\n- Printer ON hai?\n- USB connected hai?\n- Printer naam config.js mein sahi hai?`
+        );
+      } catch(_){}
     }
   }
 });
