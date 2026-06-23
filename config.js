@@ -5,10 +5,10 @@
 
 module.exports = {
   // BotFather se mila token yahan paste karo (looks like: 123456789:AAFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
-  TELEGRAM_BOT_TOKEN: "PASTE_YOUR_BOT_TOKEN_HERE",
+  TELEGRAM_BOT_TOKEN: "8914559988:AAH2VhzCg47WwCnTCeE722aEwL89IgnwSuY",
 
   // @userinfobot se mila aapka Telegram User ID yahan paste karo (sirf numbers, e.g. 123456789)
-  TELEGRAM_CHAT_ID: "PASTE_YOUR_TELEGRAM_USER_ID_HERE",
+  TELEGRAM_CHAT_ID: "",
 
   // Windows mein "Devices and Printers" mein jo EXACT naam dikhta hai wahi yahan likho
   PRINTER_NAME: "HP LaserJet Pro MFP M126 plus series",
